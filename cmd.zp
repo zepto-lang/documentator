@@ -1,0 +1,35 @@
+(load "documentator/documentator")
+(load "argparse/argparse")
+
+(define args ((import "argparse:handle-args")
+              "create function documentation"
+              (list (make-hash ["name" "output-file"] 
+                               ["short" "o"]
+                               ["type" :string]
+                               ["usage" "the file that this program should write to"])
+                    (make-hash ["name" "function"]
+                               ["short" "f"]
+                               ["type" :string]
+                               ["usage" "the function or namespace that should be documented"]))))
+
+(if (null? args) (exit 1))
+
+(define file (open-output-file (args "output-file")))
+(define fun (args "function"))
+(cond
+  ((and (string:ends-with fun "*") (< (length fun) 2))
+    (begin
+      (write "Generating docs for every function in the prelude; this might take a while...")
+      (write (documentator:global) file)))
+  ((string:ends-with fun "*")
+    (begin
+      (define f (substring fun 0 (- (length fun) 2)))
+      (write (++ "Generating docs for " f "..."))
+      (write (documentator:namespace f) file)))
+  (else
+    (begin
+      (define f (string->symbol fun))
+      (write (++ "Generating docs for " f "..."))
+      (write (documentator:function f) file))))
+(close-output-file file)
+(write (++ "Done. The documentation is now accessible under " (args "output-file") "."))

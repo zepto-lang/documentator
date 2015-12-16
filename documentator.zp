@@ -1,0 +1,82 @@
+(load "mustache/mustache")
+
+(define-syntax documentator:function
+  (syntax-rules ()
+    ((_ name)
+      (let ((document (lambda (name doc)
+        (let* ((split (string:split doc #\newline))
+               (signature (string:substitute (list:ref split (sub1 (length split))) "  source: " ""))
+               (template-string (read-contents "documentator/partial.zms")))
+        ((import "mustache:template") template-string
+          (make-hash "elements"
+            (make-hash
+              "namespace" ""
+              "contents" (make-hash
+                "name" name
+                "signature" signature
+                "docstring" (string:join (list:sublist split 0 (sub1 (length split))))))))))))
+        (document name (help name))))))
+
+(define-syntax documentator:namespace
+  (syntax-rules ()
+    ((_ name)
+      (let ((document (lambda (name)
+        (let ((template-string (read-contents "documentator/partial.zms"))
+              (all (reduce (lambda (acc name)
+                        (if (procedure? (cadr name))
+                          (let* ((n (car name))
+                                 (doc (help n))
+                                 (split (string:split doc #\newline))
+                                 (signature (if (> (length split) 1)
+                                  (string:substitute (list:ref split (sub1 (length split))) "  source: " "")
+                                  ""))
+                                 (docstring (if (> (length split) 1)
+                                  (string:join (list:sublist split 0 (sub1 (length split))))
+                                  (string:join split))))
+                            (++ acc (make-hash "name" (symbol->string n)
+                                               "signature" signature
+                                               "docstring" docstring)))
+                          acc))
+                      '()
+                      (zepto:get-bindings name))))
+        ((import "mustache:template") template-string
+          (make-hash "elements" (make-hash "namespace" name "contents" all)))))))
+        (document name)))))
+
+(define-syntax documentator:global
+  (syntax-rules ()
+    ((_)
+      (let ((document (lambda ()
+       (let* ((namespaces (map (lambda (x) (cons (string:split (symbol->string (car x)) #\:) x)) (zepto:get-bindings "")))
+              (template-string (read-contents "documentator/partial.zms"))
+              (make-fun (lambda (acc name)
+                  (if (procedure? (caddr name))
+                    (let* ((n (cadr name))
+                           (doc (help n))
+                           (split (string:split doc #\newline))
+                           (signature (if (> (length split) 1)
+                            (string:substitute (list:ref split (sub1 (length split))) "  source: " "")
+                            ""))
+                           (docstring (if (> (length split) 1)
+                            (string:join (list:sublist split 0 (sub1 (length split))))
+                            (string:join split))))
+                      (++ acc (make-hash "name" (symbol->string n)
+                                         "signature" signature
+                                         "docstring" docstring)))
+                      acc)))
+              (globals (reduce make-fun '() (filter (lambda (x) (eq? (length (car x)) 1)) namespaces)))
+              (rest-map (reduce
+                          (lambda (acc x)
+                            (let* ((fst (caar x))
+                                   (el (acc fst)))
+                              (if (nil? el)
+                                (make-hash acc fst (list x))
+                                (make-hash acc (make-hash fst (+= el x))))))
+                          (make-hash)
+                          (filter (lambda (x) (> (length (car x)) 1)) namespaces)))
+              (rest-list
+                (hash:keys-map
+                  (lambda (k) (make-hash "namespace" k "contents" (reduce make-fun '() (rest-map k)))) rest-map)))
+        ((import "mustache:template") template-string
+          (make-hash "elements" (++ rest-list (make-hash "namespace" "global" "contents" globals))))))))
+        (document)))))

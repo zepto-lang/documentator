@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      html{
+        height: 100%;
+      }
+      body{
+        font-family: sans-serif;
+        font-weight: 300;
+        height: 100%;
+        margin: 0;
+      }
+      h2 {
+        font-size: 25px;
+        font-weight: 400;
+      }
+      h3 {
+        font-size: 22px;
+        font-weight: 300;
+      }
+      h4 {
+        font-size: 20px;
+        font-weight: 300;
+      }
+      #nav{
+        float: left;
+        width: 200px;
+        padding-left: 50px;
+        height: 100%;
+        padding-right: 1em;
+      }
+      #nav ul{
+        list-style: none;
+      }
+      #docs{
+        padding-left: 50px;
+        margin-left: 260px;
+      }
+      .name{
+        line-height: 1px;
+      }
+      .fun{
+        padding-left: 10px;
+      }
+      .signature{
+        line-height: 1px;
+        color: darkgrey;
+        margin-left: 1em;
+        font-size: 15px;
+      }
+      .description{
+        margin-bottom: 3em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="nav">
+      <h3>Functions</h3>
+      {{#elements}}
+        <h4>{{namespace}}</h4>
+        <ul>
+          {{#contents}}
+          <li><a href="#{{name}}">{{name}}</a></li>
+          {{/contents}}
+        </ul>
+      {{/elements}}
+    </div>
+    <div id="docs">
+      {{#elements}}
+      <h2 id="namespace">{{namespace}}</h2>
+      {{#contents}}
+        <div class="fun">
+          <h3 id="{{name}}"class="name">{{name}}</h3>
+          <p class="signature">{{signature}}</p>
+          <p class="description">{{docstring}}</p>
+        </div>
+      {{/contents}}
+      {{/elements}}
+    </div>
+  </body>
+</html>
