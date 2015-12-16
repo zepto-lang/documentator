@@ -22,6 +22,10 @@ zepto documentator/cmd.zp --output-file foo.html --function "vector:*"
 zepto documentator/cmd.zp --output-file foo.html --function "*"
 ```
 
+Example output for the tool can be found in the `examples` directory,
+where the current (2015-16-12) output of requesting documentation
+for all the functions can be found.
+
 # Hacking your own documentation tool
 
 Of course you can hack your own documentation tool on top of documentator,
