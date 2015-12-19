@@ -9,19 +9,42 @@
         font-family: sans-serif;
         font-weight: 300;
         height: 100%;
-        margin: 0;
+      }
+      a {
+        color: #666;
+        text-decoration: none;
+      }
+      a:hover{
+        color: #000;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 300;
       }
       h2 {
         font-size: 25px;
-        font-weight: 400;
+        font-weight: 300;
       }
       h3 {
-        font-size: 22px;
+        font-size: 18px;
         font-weight: 300;
       }
       h4 {
-        font-size: 20px;
+        font-size: 17px;
         font-weight: 300;
+      }
+      #fancy-search {
+        border-width: medium medium 1px 1px;
+        border-style: none none solid solid;
+        border-color: #D3D3D3;
+        border-image: none;
+        font-size: 14px;
+        font-style: italic;
+        color: #808080;
+        width: 25em;
+        padding-bottom: 0.3em;
+        margin-top: 2em;
+        margin-bottom: 2em;
       }
       #nav{
         float: left;
@@ -29,1007 +52,1130 @@
         padding-left: 50px;
         height: 100%;
         padding-right: 1em;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        overflow-x: scroll;
+        
       }
       #nav ul{
         list-style: none;
+      }
+      #nav h4 {
+        margin-bottom: 0px;
       }
       #docs{
         padding-left: 50px;
         margin-left: 260px;
       }
       .name{
-        line-height: 1px;
+        margin: 0;
       }
       .fun{
         padding-left: 10px;
       }
       .signature{
-        line-height: 1px;
+        margin: 3px;
         color: darkgrey;
         margin-left: 1em;
         font-size: 15px;
       }
       .description{
+        margin-left: 0.5em;
         margin-bottom: 3em;
       }
+      .nav-contents{
+      }
+      .hidden {
+        display: none;
+      }
+      .clickr {
+        font-size: 12px;
+        cursor: pointer;
+      }
     </style>
+    <script>
+      filterFuns = function(pattern) {
+        if (pattern === "") {
+          [].slice.call(document.getElementsByClassName("nav-contents")).forEach(function(element) {
+            var title = element.getAttribute("id");
+            var par = document.getElementById(title.replace("-nav", "-expand"));
+
+            toggle(par, false);
+            toggleNamespace(document.getElementById(title.replace("-nav", "-namespace")), true);
+          });
+          return;
+        }
+        [].slice.call(document.getElementsByClassName("nav-contents")).forEach(function(element) {
+          var title = element.getAttribute("id");
+          var par = document.getElementById(title.replace("-nav", "-expand"));
+
+          if (title.toLowerCase().contains(pattern.toLowerCase())) {
+            toggleNamespace(document.getElementById(title.replace("-nav", "-namespace")), true);
+            toggle(par, true);
+          } else {
+            toggleNamespace(document.getElementById(title.replace("-nav", "-namespace")), false);
+            toggle(par, false);
+          }
+        });
+      };
+      const PROP = "hidden";
+      toggleNamespace = function(el, show) {
+        show ? el.classList.remove(PROP) : el.classList.add(PROP);
+      };
+      toggle = function(el, force) {
+          innerEl = document.getElementById(el.getAttribute("id").replace("-expand", "-nav"));
+
+          if ((innerEl.classList.contains(PROP) && force !== false) || force === true) {
+            el.innerHTML = "Click to hide";
+            innerEl.classList.remove(PROP);
+          } else {
+            el.innerHTML = "Click to expand";
+            innerEl.classList.add(PROP)
+          }
+      };
+      document.addEventListener("DOMContentLoaded", function() { 
+        function toggleView(ev) {
+          var el = ev.target;
+          toggle(el);
+        }
+        [].slice.call(document.getElementsByClassName("nav-contents")).forEach(function(el) {
+          var name = el.getAttribute("id");
+          var par = document.getElementById(name.replace("-nav", "-expand"));
+          par.addEventListener("click", toggleView);
+        });
+      });
+    </script>
   </head>
   <body>
     <div id="nav">
       <h3>Functions</h3>
+      <input id="fancy-search" onkeyup="filterFuns(this.value)" placeholder="Search a Function" type="text"></input>
       
-        <h4>byte-vector</h4>
-        <ul>
-          
-          <li><a href="#byte-vector:append">byte-vector:append</a></li>
-          
-          <li><a href="#byte-vector:empty?">byte-vector:empty?</a></li>
-          
-          <li><a href="#byte-vector:extend">byte-vector:extend</a></li>
-          
-          <li><a href="#byte-vector:head">byte-vector:head</a></li>
-          
-          <li><a href="#byte-vector:length">byte-vector:length</a></li>
-          
-          <li><a href="#byte-vector:map">byte-vector:map</a></li>
-          
-          <li><a href="#byte-vector:reduce">byte-vector:reduce</a></li>
-          
-          <li><a href="#byte-vector:ref">byte-vector:ref</a></li>
-          
-          <li><a href="#byte-vector:tail">byte-vector:tail</a></li>
-          
-        </ul>
+        <div id="byte-vector-namespace">
+          <h4><a href="#byte-vector">byte-vector</a></h4>
+          <span id="byte-vector-expand" class="clickr">Click to expand</span>
+          <div id="byte-vector-nav" class="nav-contents hidden">
+            <ul>
+              
+              <li><a href="#byte-vector:append">byte-vector:append</a></li>
+              
+              <li><a href="#byte-vector:empty?">byte-vector:empty?</a></li>
+              
+              <li><a href="#byte-vector:extend">byte-vector:extend</a></li>
+              
+              <li><a href="#byte-vector:head">byte-vector:head</a></li>
+              
+              <li><a href="#byte-vector:length">byte-vector:length</a></li>
+              
+              <li><a href="#byte-vector:map">byte-vector:map</a></li>
+              
+              <li><a href="#byte-vector:reduce">byte-vector:reduce</a></li>
+              
+              <li><a href="#byte-vector:ref">byte-vector:ref</a></li>
+              
+              <li><a href="#byte-vector:tail">byte-vector:tail</a></li>
+              
+            </ul>
+          </div>
+        </div>
       
-        <h4>char</h4>
-        <ul>
-          
-          <li><a href="#char:alpha?">char:alpha?</a></li>
-          
-          <li><a href="#char:alphanum?">char:alphanum?</a></li>
-          
-          <li><a href="#char:ci-cmp?">char:ci-cmp?</a></li>
-          
-          <li><a href="#char:cmp?">char:cmp?</a></li>
-          
-          <li><a href="#char:downcase">char:downcase</a></li>
-          
-          <li><a href="#char:lower-case">char:lower-case</a></li>
-          
-          <li><a href="#char:lower?">char:lower?</a></li>
-          
-          <li><a href="#char:num?">char:num?</a></li>
-          
-          <li><a href="#char:upcase">char:upcase</a></li>
-          
-          <li><a href="#char:upper-case">char:upper-case</a></li>
-          
-          <li><a href="#char:upper?">char:upper?</a></li>
-          
-        </ul>
+        <div id="char-namespace">
+          <h4><a href="#char">char</a></h4>
+          <span id="char-expand" class="clickr">Click to expand</span>
+          <div id="char-nav" class="nav-contents hidden">
+            <ul>
+              
+              <li><a href="#char:alpha?">char:alpha?</a></li>
+              
+              <li><a href="#char:alphanum?">char:alphanum?</a></li>
+              
+              <li><a href="#char:ci-cmp?">char:ci-cmp?</a></li>
+              
+              <li><a href="#char:cmp?">char:cmp?</a></li>
+              
+              <li><a href="#char:downcase">char:downcase</a></li>
+              
+              <li><a href="#char:lower-case">char:lower-case</a></li>
+              
+              <li><a href="#char:lower?">char:lower?</a></li>
+              
+              <li><a href="#char:num?">char:num?</a></li>
+              
+              <li><a href="#char:upcase">char:upcase</a></li>
+              
+              <li><a href="#char:upper-case">char:upper-case</a></li>
+              
+              <li><a href="#char:upper?">char:upper?</a></li>
+              
+            </ul>
+          </div>
+        </div>
       
-        <h4>hash</h4>
-        <ul>
-          
-          <li><a href="#hash:contains?">hash:contains?</a></li>
-          
-          <li><a href="#hash:eqv?">hash:eqv?</a></li>
-          
-          <li><a href="#hash:filter-by-keys">hash:filter-by-keys</a></li>
-          
-          <li><a href="#hash:filter-by-vals">hash:filter-by-vals</a></li>
-          
-          <li><a href="#hash:keys">hash:keys</a></li>
-          
-          <li><a href="#hash:keys-filter">hash:keys-filter</a></li>
-          
-          <li><a href="#hash:keys-map">hash:keys-map</a></li>
-          
-          <li><a href="#hash:keys-reduce">hash:keys-reduce</a></li>
-          
-          <li><a href="#hash:remove-empty">hash:remove-empty</a></li>
-          
-          <li><a href="#hash:reverse-hash">hash:reverse-hash</a></li>
-          
-          <li><a href="#hash:values">hash:values</a></li>
-          
-          <li><a href="#hash:values-filter">hash:values-filter</a></li>
-          
-          <li><a href="#hash:values-map">hash:values-map</a></li>
-          
-          <li><a href="#hash:values-reduce">hash:values-reduce</a></li>
-          
-        </ul>
+        <div id="hash-namespace">
+          <h4><a href="#hash">hash</a></h4>
+          <span id="hash-expand" class="clickr">Click to expand</span>
+          <div id="hash-nav" class="nav-contents hidden">
+            <ul>
+              
+              <li><a href="#hash:contains?">hash:contains?</a></li>
+              
+              <li><a href="#hash:eqv?">hash:eqv?</a></li>
+              
+              <li><a href="#hash:filter-by-keys">hash:filter-by-keys</a></li>
+              
+              <li><a href="#hash:filter-by-vals">hash:filter-by-vals</a></li>
+              
+              <li><a href="#hash:keys">hash:keys</a></li>
+              
+              <li><a href="#hash:keys-filter">hash:keys-filter</a></li>
+              
+              <li><a href="#hash:keys-map">hash:keys-map</a></li>
+              
+              <li><a href="#hash:keys-reduce">hash:keys-reduce</a></li>
+              
+              <li><a href="#hash:remove-empty">hash:remove-empty</a></li>
+              
+              <li><a href="#hash:reverse-hash">hash:reverse-hash</a></li>
+              
+              <li><a href="#hash:values">hash:values</a></li>
+              
+              <li><a href="#hash:values-filter">hash:values-filter</a></li>
+              
+              <li><a href="#hash:values-map">hash:values-map</a></li>
+              
+              <li><a href="#hash:values-reduce">hash:values-reduce</a></li>
+              
+            </ul>
+          </div>
+        </div>
       
-        <h4>list</h4>
-        <ul>
-          
-          <li><a href="#list:after">list:after</a></li>
-          
-          <li><a href="#list:append">list:append</a></li>
-          
-          <li><a href="#list:count">list:count</a></li>
-          
-          <li><a href="#list:drop">list:drop</a></li>
-          
-          <li><a href="#list:extend">list:extend</a></li>
-          
-          <li><a href="#list:in?">list:in?</a></li>
-          
-          <li><a href="#list:index">list:index</a></li>
-          
-          <li><a href="#list:last">list:last</a></li>
-          
-          <li><a href="#list:length">list:length</a></li>
-          
-          <li><a href="#list:matches?">list:matches?</a></li>
-          
-          <li><a href="#list:max">list:max</a></li>
-          
-          <li><a href="#list:min">list:min</a></li>
-          
-          <li><a href="#list:ref">list:ref</a></li>
-          
-          <li><a href="#list:remove-n">list:remove-n</a></li>
-          
-          <li><a href="#list:semireverse">list:semireverse</a></li>
-          
-          <li><a href="#list:shuffle">list:shuffle</a></li>
-          
-          <li><a href="#list:sublist">list:sublist</a></li>
-          
-          <li><a href="#list:tail">list:tail</a></li>
-          
-        </ul>
+        <div id="list-namespace">
+          <h4><a href="#list">list</a></h4>
+          <span id="list-expand" class="clickr">Click to expand</span>
+          <div id="list-nav" class="nav-contents hidden">
+            <ul>
+              
+              <li><a href="#list:after">list:after</a></li>
+              
+              <li><a href="#list:append">list:append</a></li>
+              
+              <li><a href="#list:count">list:count</a></li>
+              
+              <li><a href="#list:drop">list:drop</a></li>
+              
+              <li><a href="#list:extend">list:extend</a></li>
+              
+              <li><a href="#list:in?">list:in?</a></li>
+              
+              <li><a href="#list:index">list:index</a></li>
+              
+              <li><a href="#list:last">list:last</a></li>
+              
+              <li><a href="#list:length">list:length</a></li>
+              
+              <li><a href="#list:matches?">list:matches?</a></li>
+              
+              <li><a href="#list:max">list:max</a></li>
+              
+              <li><a href="#list:min">list:min</a></li>
+              
+              <li><a href="#list:ref">list:ref</a></li>
+              
+              <li><a href="#list:remove-n">list:remove-n</a></li>
+              
+              <li><a href="#list:semireverse">list:semireverse</a></li>
+              
+              <li><a href="#list:shuffle">list:shuffle</a></li>
+              
+              <li><a href="#list:sublist">list:sublist</a></li>
+              
+              <li><a href="#list:tail">list:tail</a></li>
+              
+            </ul>
+          </div>
+        </div>
       
-        <h4>math</h4>
-        <ul>
-          
-          <li><a href="#math:coprime?">math:coprime?</a></li>
-          
-          <li><a href="#math:divmod">math:divmod</a></li>
-          
-          <li><a href="#math:even?">math:even?</a></li>
-          
-          <li><a href="#math:fact">math:fact</a></li>
-          
-          <li><a href="#math:fib">math:fib</a></li>
-          
-          <li><a href="#math:gcd">math:gcd</a></li>
-          
-          <li><a href="#math:lcm">math:lcm</a></li>
-          
-          <li><a href="#math:list-sum">math:list-sum</a></li>
-          
-          <li><a href="#math:modpow">math:modpow</a></li>
-          
-          <li><a href="#math:modular-inverse">math:modular-inverse</a></li>
-          
-          <li><a href="#math:ncr">math:ncr</a></li>
-          
-          <li><a href="#math:npr">math:npr</a></li>
-          
-          <li><a href="#math:odd?">math:odd?</a></li>
-          
-          <li><a href="#math:prime-above">math:prime-above</a></li>
-          
-          <li><a href="#math:prime-below">math:prime-below</a></li>
-          
-          <li><a href="#math:prime?">math:prime?</a></li>
-          
-          <li><a href="#math:prob-prime?">math:prob-prime?</a></li>
-          
-          <li><a href="#math:prov-prime?">math:prov-prime?</a></li>
-          
-          <li><a href="#math:sigma">math:sigma</a></li>
-          
-          <li><a href="#math:simpson">math:simpson</a></li>
-          
-        </ul>
+        <div id="math-namespace">
+          <h4><a href="#math">math</a></h4>
+          <span id="math-expand" class="clickr">Click to expand</span>
+          <div id="math-nav" class="nav-contents hidden">
+            <ul>
+              
+              <li><a href="#math:coprime?">math:coprime?</a></li>
+              
+              <li><a href="#math:divmod">math:divmod</a></li>
+              
+              <li><a href="#math:even?">math:even?</a></li>
+              
+              <li><a href="#math:fact">math:fact</a></li>
+              
+              <li><a href="#math:fib">math:fib</a></li>
+              
+              <li><a href="#math:gcd">math:gcd</a></li>
+              
+              <li><a href="#math:lcm">math:lcm</a></li>
+              
+              <li><a href="#math:list-sum">math:list-sum</a></li>
+              
+              <li><a href="#math:modpow">math:modpow</a></li>
+              
+              <li><a href="#math:modular-inverse">math:modular-inverse</a></li>
+              
+              <li><a href="#math:ncr">math:ncr</a></li>
+              
+              <li><a href="#math:npr">math:npr</a></li>
+              
+              <li><a href="#math:odd?">math:odd?</a></li>
+              
+              <li><a href="#math:prime-above">math:prime-above</a></li>
+              
+              <li><a href="#math:prime-below">math:prime-below</a></li>
+              
+              <li><a href="#math:prime?">math:prime?</a></li>
+              
+              <li><a href="#math:prob-prime?">math:prob-prime?</a></li>
+              
+              <li><a href="#math:prov-prime?">math:prov-prime?</a></li>
+              
+              <li><a href="#math:sigma">math:sigma</a></li>
+              
+              <li><a href="#math:simpson">math:simpson</a></li>
+              
+            </ul>
+          </div>
+        </div>
       
-        <h4>sort</h4>
-        <ul>
-          
-          <li><a href="#sort:_insert">sort:_insert</a></li>
-          
-          <li><a href="#sort:_split">sort:_split</a></li>
-          
-          <li><a href="#sort:insertionsort">sort:insertionsort</a></li>
-          
-          <li><a href="#sort:merge">sort:merge</a></li>
-          
-          <li><a href="#sort:mergesort">sort:mergesort</a></li>
-          
-          <li><a href="#sort:quicksort">sort:quicksort</a></li>
-          
-          <li><a href="#sort:sort">sort:sort</a></li>
-          
-          <li><a href="#sort:sorted?">sort:sorted?</a></li>
-          
-        </ul>
+        <div id="sort-namespace">
+          <h4><a href="#sort">sort</a></h4>
+          <span id="sort-expand" class="clickr">Click to expand</span>
+          <div id="sort-nav" class="nav-contents hidden">
+            <ul>
+              
+              <li><a href="#sort:_insert">sort:_insert</a></li>
+              
+              <li><a href="#sort:_split">sort:_split</a></li>
+              
+              <li><a href="#sort:insertionsort">sort:insertionsort</a></li>
+              
+              <li><a href="#sort:merge">sort:merge</a></li>
+              
+              <li><a href="#sort:mergesort">sort:mergesort</a></li>
+              
+              <li><a href="#sort:quicksort">sort:quicksort</a></li>
+              
+              <li><a href="#sort:sort">sort:sort</a></li>
+              
+              <li><a href="#sort:sorted?">sort:sorted?</a></li>
+              
+            </ul>
+          </div>
+        </div>
       
-        <h4>string</h4>
-        <ul>
-          
-          <li><a href="#string:append">string:append</a></li>
-          
-          <li><a href="#string:box">string:box</a></li>
-          
-          <li><a href="#string:copy">string:copy</a></li>
-          
-          <li><a href="#string:count">string:count</a></li>
-          
-          <li><a href="#string:empty?">string:empty?</a></li>
-          
-          <li><a href="#string:ends-with">string:ends-with</a></li>
-          
-          <li><a href="#string:extend">string:extend</a></li>
-          
-          <li><a href="#string:find">string:find</a></li>
-          
-          <li><a href="#string:find-right">string:find-right</a></li>
-          
-          <li><a href="#string:head">string:head</a></li>
-          
-          <li><a href="#string:indent">string:indent</a></li>
-          
-          <li><a href="#string:join">string:join</a></li>
-          
-          <li><a href="#string:length">string:length</a></li>
-          
-          <li><a href="#string:lower-case">string:lower-case</a></li>
-          
-          <li><a href="#string:marquee">string:marquee</a></li>
-          
-          <li><a href="#string:parse">string:parse</a></li>
-          
-          <li><a href="#string:ref">string:ref</a></li>
-          
-          <li><a href="#string:remove-non-ascii">string:remove-non-ascii</a></li>
-          
-          <li><a href="#string:replicate">string:replicate</a></li>
-          
-          <li><a href="#string:split">string:split</a></li>
-          
-          <li><a href="#string:starts-with">string:starts-with</a></li>
-          
-          <li><a href="#string:substitute">string:substitute</a></li>
-          
-          <li><a href="#string:tail">string:tail</a></li>
-          
-          <li><a href="#string:upper-case">string:upper-case</a></li>
-          
-        </ul>
+        <div id="string-namespace">
+          <h4><a href="#string">string</a></h4>
+          <span id="string-expand" class="clickr">Click to expand</span>
+          <div id="string-nav" class="nav-contents hidden">
+            <ul>
+              
+              <li><a href="#string:append">string:append</a></li>
+              
+              <li><a href="#string:box">string:box</a></li>
+              
+              <li><a href="#string:copy">string:copy</a></li>
+              
+              <li><a href="#string:count">string:count</a></li>
+              
+              <li><a href="#string:empty?">string:empty?</a></li>
+              
+              <li><a href="#string:ends-with">string:ends-with</a></li>
+              
+              <li><a href="#string:extend">string:extend</a></li>
+              
+              <li><a href="#string:find">string:find</a></li>
+              
+              <li><a href="#string:find-right">string:find-right</a></li>
+              
+              <li><a href="#string:head">string:head</a></li>
+              
+              <li><a href="#string:indent">string:indent</a></li>
+              
+              <li><a href="#string:join">string:join</a></li>
+              
+              <li><a href="#string:length">string:length</a></li>
+              
+              <li><a href="#string:lower-case">string:lower-case</a></li>
+              
+              <li><a href="#string:marquee">string:marquee</a></li>
+              
+              <li><a href="#string:parse">string:parse</a></li>
+              
+              <li><a href="#string:ref">string:ref</a></li>
+              
+              <li><a href="#string:remove-non-ascii">string:remove-non-ascii</a></li>
+              
+              <li><a href="#string:replicate">string:replicate</a></li>
+              
+              <li><a href="#string:split">string:split</a></li>
+              
+              <li><a href="#string:starts-with">string:starts-with</a></li>
+              
+              <li><a href="#string:substitute">string:substitute</a></li>
+              
+              <li><a href="#string:tail">string:tail</a></li>
+              
+              <li><a href="#string:upper-case">string:upper-case</a></li>
+              
+            </ul>
+          </div>
+        </div>
       
-        <h4>vector</h4>
-        <ul>
-          
-          <li><a href="#vector:after">vector:after</a></li>
-          
-          <li><a href="#vector:append">vector:append</a></li>
-          
-          <li><a href="#vector:count">vector:count</a></li>
-          
-          <li><a href="#vector:drop">vector:drop</a></li>
-          
-          <li><a href="#vector:empty?">vector:empty?</a></li>
-          
-          <li><a href="#vector:extend">vector:extend</a></li>
-          
-          <li><a href="#vector:head">vector:head</a></li>
-          
-          <li><a href="#vector:in?">vector:in?</a></li>
-          
-          <li><a href="#vector:index">vector:index</a></li>
-          
-          <li><a href="#vector:indexed-tail">vector:indexed-tail</a></li>
-          
-          <li><a href="#vector:last">vector:last</a></li>
-          
-          <li><a href="#vector:length">vector:length</a></li>
-          
-          <li><a href="#vector:matches?">vector:matches?</a></li>
-          
-          <li><a href="#vector:max">vector:max</a></li>
-          
-          <li><a href="#vector:min">vector:min</a></li>
-          
-          <li><a href="#vector:reduce">vector:reduce</a></li>
-          
-          <li><a href="#vector:ref">vector:ref</a></li>
-          
-          <li><a href="#vector:shuffle">vector:shuffle</a></li>
-          
-          <li><a href="#vector:subvector">vector:subvector</a></li>
-          
-          <li><a href="#vector:swap">vector:swap</a></li>
-          
-          <li><a href="#vector:tail">vector:tail</a></li>
-          
-        </ul>
+        <div id="vector-namespace">
+          <h4><a href="#vector">vector</a></h4>
+          <span id="vector-expand" class="clickr">Click to expand</span>
+          <div id="vector-nav" class="nav-contents hidden">
+            <ul>
+              
+              <li><a href="#vector:after">vector:after</a></li>
+              
+              <li><a href="#vector:append">vector:append</a></li>
+              
+              <li><a href="#vector:count">vector:count</a></li>
+              
+              <li><a href="#vector:drop">vector:drop</a></li>
+              
+              <li><a href="#vector:empty?">vector:empty?</a></li>
+              
+              <li><a href="#vector:extend">vector:extend</a></li>
+              
+              <li><a href="#vector:head">vector:head</a></li>
+              
+              <li><a href="#vector:in?">vector:in?</a></li>
+              
+              <li><a href="#vector:index">vector:index</a></li>
+              
+              <li><a href="#vector:indexed-tail">vector:indexed-tail</a></li>
+              
+              <li><a href="#vector:last">vector:last</a></li>
+              
+              <li><a href="#vector:length">vector:length</a></li>
+              
+              <li><a href="#vector:matches?">vector:matches?</a></li>
+              
+              <li><a href="#vector:max">vector:max</a></li>
+              
+              <li><a href="#vector:min">vector:min</a></li>
+              
+              <li><a href="#vector:reduce">vector:reduce</a></li>
+              
+              <li><a href="#vector:ref">vector:ref</a></li>
+              
+              <li><a href="#vector:shuffle">vector:shuffle</a></li>
+              
+              <li><a href="#vector:subvector">vector:subvector</a></li>
+              
+              <li><a href="#vector:swap">vector:swap</a></li>
+              
+              <li><a href="#vector:tail">vector:tail</a></li>
+              
+            </ul>
+          </div>
+        </div>
       
-        <h4>zepto</h4>
-        <ul>
-          
-          <li><a href="#zepto:major-version">zepto:major-version</a></li>
-          
-          <li><a href="#zepto:minor-version">zepto:minor-version</a></li>
-          
-          <li><a href="#zepto:patch-version">zepto:patch-version</a></li>
-          
-          <li><a href="#zepto:version">zepto:version</a></li>
-          
-          <li><a href="#zepto:version-str">zepto:version-str</a></li>
-          
-        </ul>
+        <div id="zepto-namespace">
+          <h4><a href="#zepto">zepto</a></h4>
+          <span id="zepto-expand" class="clickr">Click to expand</span>
+          <div id="zepto-nav" class="nav-contents hidden">
+            <ul>
+              
+              <li><a href="#zepto:major-version">zepto:major-version</a></li>
+              
+              <li><a href="#zepto:minor-version">zepto:minor-version</a></li>
+              
+              <li><a href="#zepto:patch-version">zepto:patch-version</a></li>
+              
+              <li><a href="#zepto:version">zepto:version</a></li>
+              
+              <li><a href="#zepto:version-str">zepto:version-str</a></li>
+              
+            </ul>
+          </div>
+        </div>
       
-        <h4>global</h4>
-        <ul>
-          
-          <li><a href="#&amp;&amp;">&amp;&amp;</a></li>
-          
-          <li><a href="#*">*</a></li>
-          
-          <li><a href="#*&amp;">*&amp;</a></li>
-          
-          <li><a href="#**">**</a></li>
-          
-          <li><a href="#+">+</a></li>
-          
-          <li><a href="#+&amp;">+&amp;</a></li>
-          
-          <li><a href="#++">++</a></li>
-          
-          <li><a href="#+=">+=</a></li>
-          
-          <li><a href="#-">-</a></li>
-          
-          <li><a href="#-&amp;">-&amp;</a></li>
-          
-          <li><a href="#-&gt;string">-&gt;string</a></li>
-          
-          <li><a href="#/">/</a></li>
-          
-          <li><a href="#/&amp;">/&amp;</a></li>
-          
-          <li><a href="#/.">/.</a></li>
-          
-          <li><a href="#/=">/=</a></li>
-          
-          <li><a href="#&lt;">&lt;</a></li>
-          
-          <li><a href="#&lt;&amp;">&lt;&amp;</a></li>
-          
-          <li><a href="#&lt;&lt;">&lt;&lt;</a></li>
-          
-          <li><a href="#&lt;=">&lt;=</a></li>
-          
-          <li><a href="#&lt;=&amp;">&lt;=&amp;</a></li>
-          
-          <li><a href="#&lt;&gt;">&lt;&gt;</a></li>
-          
-          <li><a href="#=">=</a></li>
-          
-          <li><a href="#=&amp;">=&amp;</a></li>
-          
-          <li><a href="#&gt;">&gt;</a></li>
-          
-          <li><a href="#&gt;&amp;">&gt;&amp;</a></li>
-          
-          <li><a href="#&gt;=">&gt;=</a></li>
-          
-          <li><a href="#&gt;=&amp;">&gt;=&amp;</a></li>
-          
-          <li><a href="#&gt;&gt;">&gt;&gt;</a></li>
-          
-          <li><a href="#^">^</a></li>
-          
-          <li><a href="#abs">abs</a></li>
-          
-          <li><a href="#acos">acos</a></li>
-          
-          <li><a href="#add1">add1</a></li>
-          
-          <li><a href="#all?">all?</a></li>
-          
-          <li><a href="#and">and</a></li>
-          
-          <li><a href="#any?">any?</a></li>
-          
-          <li><a href="#append">append</a></li>
-          
-          <li><a href="#append-left">append-left</a></li>
-          
-          <li><a href="#apply">apply</a></li>
-          
-          <li><a href="#arithmetic-shift">arithmetic-shift</a></li>
-          
-          <li><a href="#ash">ash</a></li>
-          
-          <li><a href="#asin">asin</a></li>
-          
-          <li><a href="#assoc">assoc</a></li>
-          
-          <li><a href="#assq">assq</a></li>
-          
-          <li><a href="#assv">assv</a></li>
-          
-          <li><a href="#atan">atan</a></li>
-          
-          <li><a href="#atom?">atom?</a></li>
-          
-          <li><a href="#bitwise-and">bitwise-and</a></li>
-          
-          <li><a href="#bitwise-not">bitwise-not</a></li>
-          
-          <li><a href="#bitwise-or">bitwise-or</a></li>
-          
-          <li><a href="#boolean?">boolean?</a></li>
-          
-          <li><a href="#byte-vector">byte-vector</a></li>
-          
-          <li><a href="#byte-vector-&gt;list">byte-vector-&gt;list</a></li>
-          
-          <li><a href="#byte-vector-&gt;vector">byte-vector-&gt;vector</a></li>
-          
-          <li><a href="#byte-vector?">byte-vector?</a></li>
-          
-          <li><a href="#caaaar">caaaar</a></li>
-          
-          <li><a href="#caaadr">caaadr</a></li>
-          
-          <li><a href="#caaar">caaar</a></li>
-          
-          <li><a href="#caadar">caadar</a></li>
-          
-          <li><a href="#caaddr">caaddr</a></li>
-          
-          <li><a href="#caadr">caadr</a></li>
-          
-          <li><a href="#caar">caar</a></li>
-          
-          <li><a href="#cadaar">cadaar</a></li>
-          
-          <li><a href="#cadadr">cadadr</a></li>
-          
-          <li><a href="#cadar">cadar</a></li>
-          
-          <li><a href="#caddar">caddar</a></li>
-          
-          <li><a href="#cadddr">cadddr</a></li>
-          
-          <li><a href="#caddr">caddr</a></li>
-          
-          <li><a href="#cadr">cadr</a></li>
-          
-          <li><a href="#call-with-current-continuation">call-with-current-continuation</a></li>
-          
-          <li><a href="#call-with-input-file">call-with-input-file</a></li>
-          
-          <li><a href="#call-with-output-file">call-with-output-file</a></li>
-          
-          <li><a href="#call-with-values">call-with-values</a></li>
-          
-          <li><a href="#call/cc">call/cc</a></li>
-          
-          <li><a href="#car">car</a></li>
-          
-          <li><a href="#case">case</a></li>
-          
-          <li><a href="#cdaaar">cdaaar</a></li>
-          
-          <li><a href="#cdaadr">cdaadr</a></li>
-          
-          <li><a href="#cdaar">cdaar</a></li>
-          
-          <li><a href="#cdadar">cdadar</a></li>
-          
-          <li><a href="#cdaddr">cdaddr</a></li>
-          
-          <li><a href="#cdadr">cdadr</a></li>
-          
-          <li><a href="#cdar">cdar</a></li>
-          
-          <li><a href="#cddaar">cddaar</a></li>
-          
-          <li><a href="#cddadr">cddadr</a></li>
-          
-          <li><a href="#cddar">cddar</a></li>
-          
-          <li><a href="#cdddar">cdddar</a></li>
-          
-          <li><a href="#cddddr">cddddr</a></li>
-          
-          <li><a href="#cdddr">cdddr</a></li>
-          
-          <li><a href="#cddr">cddr</a></li>
-          
-          <li><a href="#cdr">cdr</a></li>
-          
-          <li><a href="#ceil">ceil</a></li>
-          
-          <li><a href="#ceiling">ceiling</a></li>
-          
-          <li><a href="#char-&gt;integer">char-&gt;integer</a></li>
-          
-          <li><a href="#char-ci/=?">char-ci/=?</a></li>
-          
-          <li><a href="#char-ci&lt;=?">char-ci&lt;=?</a></li>
-          
-          <li><a href="#char-ci&lt;?">char-ci&lt;?</a></li>
-          
-          <li><a href="#char-ci=?">char-ci=?</a></li>
-          
-          <li><a href="#char-ci&gt;=?">char-ci&gt;=?</a></li>
-          
-          <li><a href="#char-ci&gt;?">char-ci&gt;?</a></li>
-          
-          <li><a href="#char/=?">char/=?</a></li>
-          
-          <li><a href="#char&lt;=?">char&lt;=?</a></li>
-          
-          <li><a href="#char&lt;?">char&lt;?</a></li>
-          
-          <li><a href="#char=?">char=?</a></li>
-          
-          <li><a href="#char&gt;=?">char&gt;=?</a></li>
-          
-          <li><a href="#char&gt;?">char&gt;?</a></li>
-          
-          <li><a href="#char?">char?</a></li>
-          
-          <li><a href="#close-input-file">close-input-file</a></li>
-          
-          <li><a href="#close-output-file">close-output-file</a></li>
-          
-          <li><a href="#color">color</a></li>
-          
-          <li><a href="#complex?">complex?</a></li>
-          
-          <li><a href="#compose">compose</a></li>
-          
-          <li><a href="#cong">cong</a></li>
-          
-          <li><a href="#cons">cons</a></li>
-          
-          <li><a href="#cos">cos</a></li>
-          
-          <li><a href="#countdown">countdown</a></li>
-          
-          <li><a href="#cps-prim">cps-prim</a></li>
-          
-          <li><a href="#curry">curry</a></li>
-          
-          <li><a href="#display">display</a></li>
-          
-          <li><a href="#eq?">eq?</a></li>
-          
-          <li><a href="#equal?">equal?</a></li>
-          
-          <li><a href="#eqv?">eqv?</a></li>
-          
-          <li><a href="#error">error</a></li>
-          
-          <li><a href="#error?">error?</a></li>
-          
-          <li><a href="#escape-sequence">escape-sequence</a></li>
-          
-          <li><a href="#eval">eval</a></li>
-          
-          <li><a href="#every?">every?</a></li>
-          
-          <li><a href="#exact-&gt;inexact">exact-&gt;inexact</a></li>
-          
-          <li><a href="#exact?">exact?</a></li>
-          
-          <li><a href="#exit">exit</a></li>
-          
-          <li><a href="#expt">expt</a></li>
-          
-          <li><a href="#extend">extend</a></li>
-          
-          <li><a href="#falsy?">falsy?</a></li>
-          
-          <li><a href="#fib">fib</a></li>
-          
-          <li><a href="#field-index">field-index</a></li>
-          
-          <li><a href="#filter">filter</a></li>
-          
-          <li><a href="#find-extension">find-extension</a></li>
-          
-          <li><a href="#flip">flip</a></li>
-          
-          <li><a href="#float?">float?</a></li>
-          
-          <li><a href="#floor">floor</a></li>
-          
-          <li><a href="#fold">fold</a></li>
-          
-          <li><a href="#fold-short">fold-short</a></li>
-          
-          <li><a href="#foldl">foldl</a></li>
-          
-          <li><a href="#foldl1">foldl1</a></li>
-          
-          <li><a href="#foldr">foldr</a></li>
-          
-          <li><a href="#foldr1">foldr1</a></li>
-          
-          <li><a href="#for-each">for-each</a></li>
-          
-          <li><a href="#force">force</a></li>
-          
-          <li><a href="#foreach">foreach</a></li>
-          
-          <li><a href="#from-simple-list">from-simple-list</a></li>
-          
-          <li><a href="#get-from">get-from</a></li>
-          
-          <li><a href="#get-home-dir">get-home-dir</a></li>
-          
-          <li><a href="#get/cc">get/cc</a></li>
-          
-          <li><a href="#gsum">gsum</a></li>
-          
-          <li><a href="#hash-map?">hash-map?</a></li>
-          
-          <li><a href="#head">head</a></li>
-          
-          <li><a href="#id">id</a></li>
-          
-          <li><a href="#imaginary">imaginary</a></li>
-          
-          <li><a href="#import">import</a></li>
-          
-          <li><a href="#in?">in?</a></li>
-          
-          <li><a href="#index-of">index-of</a></li>
-          
-          <li><a href="#indexed-map">indexed-map</a></li>
-          
-          <li><a href="#indexed-tail">indexed-tail</a></li>
-          
-          <li><a href="#inexact?">inexact?</a></li>
-          
-          <li><a href="#inf">inf</a></li>
-          
-          <li><a href="#inf?">inf?</a></li>
-          
-          <li><a href="#input-port?">input-port?</a></li>
-          
-          <li><a href="#inspect">inspect</a></li>
-          
-          <li><a href="#integer-&gt;float">integer-&gt;float</a></li>
-          
-          <li><a href="#integer?">integer?</a></li>
-          
-          <li><a href="#iota">iota</a></li>
-          
-          <li><a href="#ipow">ipow</a></li>
-          
-          <li><a href="#kiss">kiss</a></li>
-          
-          <li><a href="#len">len</a></li>
-          
-          <li><a href="#length">length</a></li>
-          
-          <li><a href="#lfib4">lfib4</a></li>
-          
-          <li><a href="#list">list</a></li>
-          
-          <li><a href="#list-&gt;string">list-&gt;string</a></li>
-          
-          <li><a href="#list-&gt;vector">list-&gt;vector</a></li>
-          
-          <li><a href="#list?">list?</a></li>
-          
-          <li><a href="#log">log</a></li>
-          
-          <li><a href="#logand">logand</a></li>
-          
-          <li><a href="#logxor">logxor</a></li>
-          
-          <li><a href="#make-base-env">make-base-env</a></li>
-          
-          <li><a href="#make-byte-vector">make-byte-vector</a></li>
-          
-          <li><a href="#make-hash">make-hash</a></li>
-          
-          <li><a href="#make-null-env">make-null-env</a></li>
-          
-          <li><a href="#make-promise">make-promise</a></li>
-          
-          <li><a href="#make-record">make-record</a></li>
-          
-          <li><a href="#make-record-type">make-record-type</a></li>
-          
-          <li><a href="#make-simple-list">make-simple-list</a></li>
-          
-          <li><a href="#make-small">make-small</a></li>
-          
-          <li><a href="#make-string">make-string</a></li>
-          
-          <li><a href="#make-vector">make-vector</a></li>
-          
-          <li><a href="#map">map</a></li>
-          
-          <li><a href="#max">max</a></li>
-          
-          <li><a href="#mem-helper">mem-helper</a></li>
-          
-          <li><a href="#member">member</a></li>
-          
-          <li><a href="#memq">memq</a></li>
-          
-          <li><a href="#memv">memv</a></li>
-          
-          <li><a href="#min">min</a></li>
-          
-          <li><a href="#mod">mod</a></li>
-          
-          <li><a href="#modulo">modulo</a></li>
-          
-          <li><a href="#mwc">mwc</a></li>
-          
-          <li><a href="#my-mem-helper">my-mem-helper</a></li>
-          
-          <li><a href="#negative?">negative?</a></li>
-          
-          <li><a href="#newline">newline</a></li>
-          
-          <li><a href="#nil">nil</a></li>
-          
-          <li><a href="#nil?">nil?</a></li>
-          
-          <li><a href="#no?">no?</a></li>
-          
-          <li><a href="#nor">nor</a></li>
-          
-          <li><a href="#not">not</a></li>
-          
-          <li><a href="#null?">null?</a></li>
-          
-          <li><a href="#number-&gt;string">number-&gt;string</a></li>
-          
-          <li><a href="#number?">number?</a></li>
-          
-          <li><a href="#ok?">ok?</a></li>
-          
-          <li><a href="#open-input-file">open-input-file</a></li>
-          
-          <li><a href="#open-output-file">open-output-file</a></li>
-          
-          <li><a href="#or">or</a></li>
-          
-          <li><a href="#output-port?">output-port?</a></li>
-          
-          <li><a href="#pair?">pair?</a></li>
-          
-          <li><a href="#parse">parse</a></li>
-          
-          <li><a href="#peek-char">peek-char</a></li>
-          
-          <li><a href="#pop-left">pop-left</a></li>
-          
-          <li><a href="#pop-right">pop-right</a></li>
-          
-          <li><a href="#port?">port?</a></li>
-          
-          <li><a href="#positive?">positive?</a></li>
-          
-          <li><a href="#pow">pow</a></li>
-          
-          <li><a href="#pow&amp;">pow&amp;</a></li>
-          
-          <li><a href="#pred">pred</a></li>
-          
-          <li><a href="#procedure?">procedure?</a></li>
-          
-          <li><a href="#product">product</a></li>
-          
-          <li><a href="#quotient">quotient</a></li>
-          
-          <li><a href="#randint">randint</a></li>
-          
-          <li><a href="#random">random</a></li>
-          
-          <li><a href="#random-list">random-list</a></li>
-          
-          <li><a href="#random-prime">random-prime</a></li>
-          
-          <li><a href="#random-prime-distinct-from">random-prime-distinct-from</a></li>
-          
-          <li><a href="#range">range</a></li>
-          
-          <li><a href="#rational?">rational?</a></li>
-          
-          <li><a href="#read">read</a></li>
-          
-          <li><a href="#read-char">read-char</a></li>
-          
-          <li><a href="#read-contents">read-contents</a></li>
-          
-          <li><a href="#read-contents-binary">read-contents-binary</a></li>
-          
-          <li><a href="#read?">read?</a></li>
-          
-          <li><a href="#real">real</a></li>
-          
-          <li><a href="#real?">real?</a></li>
-          
-          <li><a href="#record-accessor">record-accessor</a></li>
-          
-          <li><a href="#record-constructor">record-constructor</a></li>
-          
-          <li><a href="#record-modifier">record-modifier</a></li>
-          
-          <li><a href="#record-predicate">record-predicate</a></li>
-          
-          <li><a href="#record-ref">record-ref</a></li>
-          
-          <li><a href="#record-type">record-type</a></li>
-          
-          <li><a href="#record-type-field-tags">record-type-field-tags</a></li>
-          
-          <li><a href="#record-type-name">record-type-name</a></li>
-          
-          <li><a href="#record?">record?</a></li>
-          
-          <li><a href="#reduce">reduce</a></li>
-          
-          <li><a href="#register-extension">register-extension</a></li>
-          
-          <li><a href="#remainder">remainder</a></li>
-          
-          <li><a href="#remp">remp</a></li>
-          
-          <li><a href="#replicate">replicate</a></li>
-          
-          <li><a href="#require-extension">require-extension</a></li>
-          
-          <li><a href="#reverse">reverse</a></li>
-          
-          <li><a href="#round">round</a></li>
-          
-          <li><a href="#safe-div">safe-div</a></li>
-          
-          <li><a href="#settable">settable</a></li>
-          
-          <li><a href="#short-and">short-and</a></li>
-          
-          <li><a href="#short-or">short-or</a></li>
-          
-          <li><a href="#shr3">shr3</a></li>
-          
-          <li><a href="#simple-list?">simple-list?</a></li>
-          
-          <li><a href="#simple?">simple?</a></li>
-          
-          <li><a href="#sin">sin</a></li>
-          
-          <li><a href="#small-int?">small-int?</a></li>
-          
-          <li><a href="#sqrt">sqrt</a></li>
-          
-          <li><a href="#sqrt&amp;">sqrt&amp;</a></li>
-          
-          <li><a href="#string">string</a></li>
-          
-          <li><a href="#string-&gt;boolean">string-&gt;boolean</a></li>
-          
-          <li><a href="#string-&gt;complex">string-&gt;complex</a></li>
-          
-          <li><a href="#string-&gt;float">string-&gt;float</a></li>
-          
-          <li><a href="#string-&gt;integer">string-&gt;integer</a></li>
-          
-          <li><a href="#string-&gt;list">string-&gt;list</a></li>
-          
-          <li><a href="#string-&gt;number">string-&gt;number</a></li>
-          
-          <li><a href="#string-&gt;rational">string-&gt;rational</a></li>
-          
-          <li><a href="#string-&gt;symbol">string-&gt;symbol</a></li>
-          
-          <li><a href="#string-ci&lt;=?">string-ci&lt;=?</a></li>
-          
-          <li><a href="#string-ci&lt;?">string-ci&lt;?</a></li>
-          
-          <li><a href="#string-ci=?">string-ci=?</a></li>
-          
-          <li><a href="#string-ci&gt;=?">string-ci&gt;=?</a></li>
-          
-          <li><a href="#string-ci&gt;?">string-ci&gt;?</a></li>
-          
-          <li><a href="#string&lt;=?">string&lt;=?</a></li>
-          
-          <li><a href="#string&lt;?">string&lt;?</a></li>
-          
-          <li><a href="#string=?">string=?</a></li>
-          
-          <li><a href="#string&gt;=?">string&gt;=?</a></li>
-          
-          <li><a href="#string&gt;?">string&gt;?</a></li>
-          
-          <li><a href="#string?">string?</a></li>
-          
-          <li><a href="#sub1">sub1</a></li>
-          
-          <li><a href="#substring">substring</a></li>
-          
-          <li><a href="#succ">succ</a></li>
-          
-          <li><a href="#sum">sum</a></li>
-          
-          <li><a href="#swb">swb</a></li>
-          
-          <li><a href="#symbol-&gt;string">symbol-&gt;string</a></li>
-          
-          <li><a href="#symbol?">symbol?</a></li>
-          
-          <li><a href="#system">system</a></li>
-          
-          <li><a href="#tail">tail</a></li>
-          
-          <li><a href="#tan">tan</a></li>
-          
-          <li><a href="#test-rng">test-rng</a></li>
-          
-          <li><a href="#truncate">truncate</a></li>
-          
-          <li><a href="#truthy?">truthy?</a></li>
-          
-          <li><a href="#typeof">typeof</a></li>
-          
-          <li><a href="#uni">uni</a></li>
-          
-          <li><a href="#unix-timestamp">unix-timestamp</a></li>
-          
-          <li><a href="#unzip1-with-cdr">unzip1-with-cdr</a></li>
-          
-          <li><a href="#unzip1-with-cdr-iterative">unzip1-with-cdr-iterative</a></li>
-          
-          <li><a href="#values">values</a></li>
-          
-          <li><a href="#vector">vector</a></li>
-          
-          <li><a href="#vector-&gt;byte-vector">vector-&gt;byte-vector</a></li>
-          
-          <li><a href="#vector-&gt;list">vector-&gt;list</a></li>
-          
-          <li><a href="#vector?">vector?</a></li>
-          
-          <li><a href="#vni">vni</a></li>
-          
-          <li><a href="#with-input-from-file">with-input-from-file</a></li>
-          
-          <li><a href="#with-output-to-file">with-output-to-file</a></li>
-          
-          <li><a href="#write">write</a></li>
-          
-          <li><a href="#write-char">write-char</a></li>
-          
-          <li><a href="#write?">write?</a></li>
-          
-          <li><a href="#wrong?">wrong?</a></li>
-          
-          <li><a href="#yes?">yes?</a></li>
-          
-          <li><a href="#zero?">zero?</a></li>
-          
-          <li><a href="#zip">zip</a></li>
-          
-          <li><a href="#|&gt;">|&gt;</a></li>
-          
-          <li><a href="#||">||</a></li>
-          
-        </ul>
+        <div id="global-namespace">
+          <h4><a href="#global">global</a></h4>
+          <span id="global-expand" class="clickr">Click to expand</span>
+          <div id="global-nav" class="nav-contents hidden">
+            <ul>
+              
+              <li><a href="#&amp;&amp;">&amp;&amp;</a></li>
+              
+              <li><a href="#*">*</a></li>
+              
+              <li><a href="#*&amp;">*&amp;</a></li>
+              
+              <li><a href="#**">**</a></li>
+              
+              <li><a href="#+">+</a></li>
+              
+              <li><a href="#+&amp;">+&amp;</a></li>
+              
+              <li><a href="#++">++</a></li>
+              
+              <li><a href="#+=">+=</a></li>
+              
+              <li><a href="#-">-</a></li>
+              
+              <li><a href="#-&amp;">-&amp;</a></li>
+              
+              <li><a href="#-&gt;string">-&gt;string</a></li>
+              
+              <li><a href="#/">/</a></li>
+              
+              <li><a href="#/&amp;">/&amp;</a></li>
+              
+              <li><a href="#/.">/.</a></li>
+              
+              <li><a href="#/=">/=</a></li>
+              
+              <li><a href="#&lt;">&lt;</a></li>
+              
+              <li><a href="#&lt;&amp;">&lt;&amp;</a></li>
+              
+              <li><a href="#&lt;&lt;">&lt;&lt;</a></li>
+              
+              <li><a href="#&lt;=">&lt;=</a></li>
+              
+              <li><a href="#&lt;=&amp;">&lt;=&amp;</a></li>
+              
+              <li><a href="#&lt;&gt;">&lt;&gt;</a></li>
+              
+              <li><a href="#=">=</a></li>
+              
+              <li><a href="#=&amp;">=&amp;</a></li>
+              
+              <li><a href="#&gt;">&gt;</a></li>
+              
+              <li><a href="#&gt;&amp;">&gt;&amp;</a></li>
+              
+              <li><a href="#&gt;=">&gt;=</a></li>
+              
+              <li><a href="#&gt;=&amp;">&gt;=&amp;</a></li>
+              
+              <li><a href="#&gt;&gt;">&gt;&gt;</a></li>
+              
+              <li><a href="#^">^</a></li>
+              
+              <li><a href="#abs">abs</a></li>
+              
+              <li><a href="#acos">acos</a></li>
+              
+              <li><a href="#add1">add1</a></li>
+              
+              <li><a href="#all?">all?</a></li>
+              
+              <li><a href="#and">and</a></li>
+              
+              <li><a href="#any?">any?</a></li>
+              
+              <li><a href="#append">append</a></li>
+              
+              <li><a href="#append-left">append-left</a></li>
+              
+              <li><a href="#apply">apply</a></li>
+              
+              <li><a href="#arithmetic-shift">arithmetic-shift</a></li>
+              
+              <li><a href="#ash">ash</a></li>
+              
+              <li><a href="#asin">asin</a></li>
+              
+              <li><a href="#assoc">assoc</a></li>
+              
+              <li><a href="#assq">assq</a></li>
+              
+              <li><a href="#assv">assv</a></li>
+              
+              <li><a href="#atan">atan</a></li>
+              
+              <li><a href="#atom?">atom?</a></li>
+              
+              <li><a href="#bitwise-and">bitwise-and</a></li>
+              
+              <li><a href="#bitwise-not">bitwise-not</a></li>
+              
+              <li><a href="#bitwise-or">bitwise-or</a></li>
+              
+              <li><a href="#boolean?">boolean?</a></li>
+              
+              <li><a href="#byte-vector">byte-vector</a></li>
+              
+              <li><a href="#byte-vector-&gt;list">byte-vector-&gt;list</a></li>
+              
+              <li><a href="#byte-vector-&gt;vector">byte-vector-&gt;vector</a></li>
+              
+              <li><a href="#byte-vector?">byte-vector?</a></li>
+              
+              <li><a href="#caaaar">caaaar</a></li>
+              
+              <li><a href="#caaadr">caaadr</a></li>
+              
+              <li><a href="#caaar">caaar</a></li>
+              
+              <li><a href="#caadar">caadar</a></li>
+              
+              <li><a href="#caaddr">caaddr</a></li>
+              
+              <li><a href="#caadr">caadr</a></li>
+              
+              <li><a href="#caar">caar</a></li>
+              
+              <li><a href="#cadaar">cadaar</a></li>
+              
+              <li><a href="#cadadr">cadadr</a></li>
+              
+              <li><a href="#cadar">cadar</a></li>
+              
+              <li><a href="#caddar">caddar</a></li>
+              
+              <li><a href="#cadddr">cadddr</a></li>
+              
+              <li><a href="#caddr">caddr</a></li>
+              
+              <li><a href="#cadr">cadr</a></li>
+              
+              <li><a href="#call-with-current-continuation">call-with-current-continuation</a></li>
+              
+              <li><a href="#call-with-input-file">call-with-input-file</a></li>
+              
+              <li><a href="#call-with-output-file">call-with-output-file</a></li>
+              
+              <li><a href="#call-with-values">call-with-values</a></li>
+              
+              <li><a href="#call/cc">call/cc</a></li>
+              
+              <li><a href="#car">car</a></li>
+              
+              <li><a href="#case">case</a></li>
+              
+              <li><a href="#cdaaar">cdaaar</a></li>
+              
+              <li><a href="#cdaadr">cdaadr</a></li>
+              
+              <li><a href="#cdaar">cdaar</a></li>
+              
+              <li><a href="#cdadar">cdadar</a></li>
+              
+              <li><a href="#cdaddr">cdaddr</a></li>
+              
+              <li><a href="#cdadr">cdadr</a></li>
+              
+              <li><a href="#cdar">cdar</a></li>
+              
+              <li><a href="#cddaar">cddaar</a></li>
+              
+              <li><a href="#cddadr">cddadr</a></li>
+              
+              <li><a href="#cddar">cddar</a></li>
+              
+              <li><a href="#cdddar">cdddar</a></li>
+              
+              <li><a href="#cddddr">cddddr</a></li>
+              
+              <li><a href="#cdddr">cdddr</a></li>
+              
+              <li><a href="#cddr">cddr</a></li>
+              
+              <li><a href="#cdr">cdr</a></li>
+              
+              <li><a href="#ceil">ceil</a></li>
+              
+              <li><a href="#ceiling">ceiling</a></li>
+              
+              <li><a href="#char-&gt;integer">char-&gt;integer</a></li>
+              
+              <li><a href="#char-ci/=?">char-ci/=?</a></li>
+              
+              <li><a href="#char-ci&lt;=?">char-ci&lt;=?</a></li>
+              
+              <li><a href="#char-ci&lt;?">char-ci&lt;?</a></li>
+              
+              <li><a href="#char-ci=?">char-ci=?</a></li>
+              
+              <li><a href="#char-ci&gt;=?">char-ci&gt;=?</a></li>
+              
+              <li><a href="#char-ci&gt;?">char-ci&gt;?</a></li>
+              
+              <li><a href="#char/=?">char/=?</a></li>
+              
+              <li><a href="#char&lt;=?">char&lt;=?</a></li>
+              
+              <li><a href="#char&lt;?">char&lt;?</a></li>
+              
+              <li><a href="#char=?">char=?</a></li>
+              
+              <li><a href="#char&gt;=?">char&gt;=?</a></li>
+              
+              <li><a href="#char&gt;?">char&gt;?</a></li>
+              
+              <li><a href="#char?">char?</a></li>
+              
+              <li><a href="#close-input-file">close-input-file</a></li>
+              
+              <li><a href="#close-output-file">close-output-file</a></li>
+              
+              <li><a href="#color">color</a></li>
+              
+              <li><a href="#complex?">complex?</a></li>
+              
+              <li><a href="#compose">compose</a></li>
+              
+              <li><a href="#cong">cong</a></li>
+              
+              <li><a href="#cons">cons</a></li>
+              
+              <li><a href="#cos">cos</a></li>
+              
+              <li><a href="#countdown">countdown</a></li>
+              
+              <li><a href="#cps-prim">cps-prim</a></li>
+              
+              <li><a href="#curry">curry</a></li>
+              
+              <li><a href="#display">display</a></li>
+              
+              <li><a href="#eq?">eq?</a></li>
+              
+              <li><a href="#equal?">equal?</a></li>
+              
+              <li><a href="#eqv?">eqv?</a></li>
+              
+              <li><a href="#error">error</a></li>
+              
+              <li><a href="#error?">error?</a></li>
+              
+              <li><a href="#escape-sequence">escape-sequence</a></li>
+              
+              <li><a href="#eval">eval</a></li>
+              
+              <li><a href="#every?">every?</a></li>
+              
+              <li><a href="#exact-&gt;inexact">exact-&gt;inexact</a></li>
+              
+              <li><a href="#exact?">exact?</a></li>
+              
+              <li><a href="#exit">exit</a></li>
+              
+              <li><a href="#expt">expt</a></li>
+              
+              <li><a href="#extend">extend</a></li>
+              
+              <li><a href="#falsy?">falsy?</a></li>
+              
+              <li><a href="#fib">fib</a></li>
+              
+              <li><a href="#field-index">field-index</a></li>
+              
+              <li><a href="#filter">filter</a></li>
+              
+              <li><a href="#find-extension">find-extension</a></li>
+              
+              <li><a href="#flip">flip</a></li>
+              
+              <li><a href="#float?">float?</a></li>
+              
+              <li><a href="#floor">floor</a></li>
+              
+              <li><a href="#fold">fold</a></li>
+              
+              <li><a href="#fold-short">fold-short</a></li>
+              
+              <li><a href="#foldl">foldl</a></li>
+              
+              <li><a href="#foldl1">foldl1</a></li>
+              
+              <li><a href="#foldr">foldr</a></li>
+              
+              <li><a href="#foldr1">foldr1</a></li>
+              
+              <li><a href="#for-each">for-each</a></li>
+              
+              <li><a href="#force">force</a></li>
+              
+              <li><a href="#foreach">foreach</a></li>
+              
+              <li><a href="#from-simple-list">from-simple-list</a></li>
+              
+              <li><a href="#get-from">get-from</a></li>
+              
+              <li><a href="#get-home-dir">get-home-dir</a></li>
+              
+              <li><a href="#get/cc">get/cc</a></li>
+              
+              <li><a href="#gsum">gsum</a></li>
+              
+              <li><a href="#hash-map?">hash-map?</a></li>
+              
+              <li><a href="#head">head</a></li>
+              
+              <li><a href="#id">id</a></li>
+              
+              <li><a href="#imaginary">imaginary</a></li>
+              
+              <li><a href="#import">import</a></li>
+              
+              <li><a href="#in?">in?</a></li>
+              
+              <li><a href="#index-of">index-of</a></li>
+              
+              <li><a href="#indexed-map">indexed-map</a></li>
+              
+              <li><a href="#indexed-tail">indexed-tail</a></li>
+              
+              <li><a href="#inexact?">inexact?</a></li>
+              
+              <li><a href="#inf">inf</a></li>
+              
+              <li><a href="#inf?">inf?</a></li>
+              
+              <li><a href="#input-port?">input-port?</a></li>
+              
+              <li><a href="#inspect">inspect</a></li>
+              
+              <li><a href="#integer-&gt;float">integer-&gt;float</a></li>
+              
+              <li><a href="#integer?">integer?</a></li>
+              
+              <li><a href="#iota">iota</a></li>
+              
+              <li><a href="#ipow">ipow</a></li>
+              
+              <li><a href="#kiss">kiss</a></li>
+              
+              <li><a href="#len">len</a></li>
+              
+              <li><a href="#length">length</a></li>
+              
+              <li><a href="#lfib4">lfib4</a></li>
+              
+              <li><a href="#list">list</a></li>
+              
+              <li><a href="#list-&gt;string">list-&gt;string</a></li>
+              
+              <li><a href="#list-&gt;vector">list-&gt;vector</a></li>
+              
+              <li><a href="#list?">list?</a></li>
+              
+              <li><a href="#log">log</a></li>
+              
+              <li><a href="#logand">logand</a></li>
+              
+              <li><a href="#logxor">logxor</a></li>
+              
+              <li><a href="#make-base-env">make-base-env</a></li>
+              
+              <li><a href="#make-byte-vector">make-byte-vector</a></li>
+              
+              <li><a href="#make-hash">make-hash</a></li>
+              
+              <li><a href="#make-null-env">make-null-env</a></li>
+              
+              <li><a href="#make-promise">make-promise</a></li>
+              
+              <li><a href="#make-record">make-record</a></li>
+              
+              <li><a href="#make-record-type">make-record-type</a></li>
+              
+              <li><a href="#make-simple-list">make-simple-list</a></li>
+              
+              <li><a href="#make-small">make-small</a></li>
+              
+              <li><a href="#make-string">make-string</a></li>
+              
+              <li><a href="#make-vector">make-vector</a></li>
+              
+              <li><a href="#map">map</a></li>
+              
+              <li><a href="#max">max</a></li>
+              
+              <li><a href="#mem-helper">mem-helper</a></li>
+              
+              <li><a href="#member">member</a></li>
+              
+              <li><a href="#memq">memq</a></li>
+              
+              <li><a href="#memv">memv</a></li>
+              
+              <li><a href="#min">min</a></li>
+              
+              <li><a href="#mod">mod</a></li>
+              
+              <li><a href="#modulo">modulo</a></li>
+              
+              <li><a href="#mwc">mwc</a></li>
+              
+              <li><a href="#my-mem-helper">my-mem-helper</a></li>
+              
+              <li><a href="#negative?">negative?</a></li>
+              
+              <li><a href="#newline">newline</a></li>
+              
+              <li><a href="#nil">nil</a></li>
+              
+              <li><a href="#nil?">nil?</a></li>
+              
+              <li><a href="#no?">no?</a></li>
+              
+              <li><a href="#nor">nor</a></li>
+              
+              <li><a href="#not">not</a></li>
+              
+              <li><a href="#null?">null?</a></li>
+              
+              <li><a href="#number-&gt;string">number-&gt;string</a></li>
+              
+              <li><a href="#number?">number?</a></li>
+              
+              <li><a href="#ok?">ok?</a></li>
+              
+              <li><a href="#open-input-file">open-input-file</a></li>
+              
+              <li><a href="#open-output-file">open-output-file</a></li>
+              
+              <li><a href="#or">or</a></li>
+              
+              <li><a href="#output-port?">output-port?</a></li>
+              
+              <li><a href="#pair?">pair?</a></li>
+              
+              <li><a href="#parse">parse</a></li>
+              
+              <li><a href="#peek-char">peek-char</a></li>
+              
+              <li><a href="#pop-left">pop-left</a></li>
+              
+              <li><a href="#pop-right">pop-right</a></li>
+              
+              <li><a href="#port?">port?</a></li>
+              
+              <li><a href="#positive?">positive?</a></li>
+              
+              <li><a href="#pow">pow</a></li>
+              
+              <li><a href="#pow&amp;">pow&amp;</a></li>
+              
+              <li><a href="#pred">pred</a></li>
+              
+              <li><a href="#procedure?">procedure?</a></li>
+              
+              <li><a href="#product">product</a></li>
+              
+              <li><a href="#quotient">quotient</a></li>
+              
+              <li><a href="#randint">randint</a></li>
+              
+              <li><a href="#random">random</a></li>
+              
+              <li><a href="#random-list">random-list</a></li>
+              
+              <li><a href="#random-prime">random-prime</a></li>
+              
+              <li><a href="#random-prime-distinct-from">random-prime-distinct-from</a></li>
+              
+              <li><a href="#range">range</a></li>
+              
+              <li><a href="#rational?">rational?</a></li>
+              
+              <li><a href="#read">read</a></li>
+              
+              <li><a href="#read-char">read-char</a></li>
+              
+              <li><a href="#read-contents">read-contents</a></li>
+              
+              <li><a href="#read-contents-binary">read-contents-binary</a></li>
+              
+              <li><a href="#read?">read?</a></li>
+              
+              <li><a href="#real">real</a></li>
+              
+              <li><a href="#real?">real?</a></li>
+              
+              <li><a href="#record-accessor">record-accessor</a></li>
+              
+              <li><a href="#record-constructor">record-constructor</a></li>
+              
+              <li><a href="#record-modifier">record-modifier</a></li>
+              
+              <li><a href="#record-predicate">record-predicate</a></li>
+              
+              <li><a href="#record-ref">record-ref</a></li>
+              
+              <li><a href="#record-type">record-type</a></li>
+              
+              <li><a href="#record-type-field-tags">record-type-field-tags</a></li>
+              
+              <li><a href="#record-type-name">record-type-name</a></li>
+              
+              <li><a href="#record?">record?</a></li>
+              
+              <li><a href="#reduce">reduce</a></li>
+              
+              <li><a href="#register-extension">register-extension</a></li>
+              
+              <li><a href="#remainder">remainder</a></li>
+              
+              <li><a href="#remp">remp</a></li>
+              
+              <li><a href="#replicate">replicate</a></li>
+              
+              <li><a href="#require-extension">require-extension</a></li>
+              
+              <li><a href="#reverse">reverse</a></li>
+              
+              <li><a href="#round">round</a></li>
+              
+              <li><a href="#safe-div">safe-div</a></li>
+              
+              <li><a href="#settable">settable</a></li>
+              
+              <li><a href="#short-and">short-and</a></li>
+              
+              <li><a href="#short-or">short-or</a></li>
+              
+              <li><a href="#shr3">shr3</a></li>
+              
+              <li><a href="#simple-list?">simple-list?</a></li>
+              
+              <li><a href="#simple?">simple?</a></li>
+              
+              <li><a href="#sin">sin</a></li>
+              
+              <li><a href="#small-int?">small-int?</a></li>
+              
+              <li><a href="#sqrt">sqrt</a></li>
+              
+              <li><a href="#sqrt&amp;">sqrt&amp;</a></li>
+              
+              <li><a href="#string">string</a></li>
+              
+              <li><a href="#string-&gt;boolean">string-&gt;boolean</a></li>
+              
+              <li><a href="#string-&gt;complex">string-&gt;complex</a></li>
+              
+              <li><a href="#string-&gt;float">string-&gt;float</a></li>
+              
+              <li><a href="#string-&gt;integer">string-&gt;integer</a></li>
+              
+              <li><a href="#string-&gt;list">string-&gt;list</a></li>
+              
+              <li><a href="#string-&gt;number">string-&gt;number</a></li>
+              
+              <li><a href="#string-&gt;rational">string-&gt;rational</a></li>
+              
+              <li><a href="#string-&gt;symbol">string-&gt;symbol</a></li>
+              
+              <li><a href="#string-ci&lt;=?">string-ci&lt;=?</a></li>
+              
+              <li><a href="#string-ci&lt;?">string-ci&lt;?</a></li>
+              
+              <li><a href="#string-ci=?">string-ci=?</a></li>
+              
+              <li><a href="#string-ci&gt;=?">string-ci&gt;=?</a></li>
+              
+              <li><a href="#string-ci&gt;?">string-ci&gt;?</a></li>
+              
+              <li><a href="#string&lt;=?">string&lt;=?</a></li>
+              
+              <li><a href="#string&lt;?">string&lt;?</a></li>
+              
+              <li><a href="#string=?">string=?</a></li>
+              
+              <li><a href="#string&gt;=?">string&gt;=?</a></li>
+              
+              <li><a href="#string&gt;?">string&gt;?</a></li>
+              
+              <li><a href="#string?">string?</a></li>
+              
+              <li><a href="#sub1">sub1</a></li>
+              
+              <li><a href="#substring">substring</a></li>
+              
+              <li><a href="#succ">succ</a></li>
+              
+              <li><a href="#sum">sum</a></li>
+              
+              <li><a href="#swb">swb</a></li>
+              
+              <li><a href="#symbol-&gt;string">symbol-&gt;string</a></li>
+              
+              <li><a href="#symbol?">symbol?</a></li>
+              
+              <li><a href="#system">system</a></li>
+              
+              <li><a href="#tail">tail</a></li>
+              
+              <li><a href="#tan">tan</a></li>
+              
+              <li><a href="#test-rng">test-rng</a></li>
+              
+              <li><a href="#truncate">truncate</a></li>
+              
+              <li><a href="#truthy?">truthy?</a></li>
+              
+              <li><a href="#typeof">typeof</a></li>
+              
+              <li><a href="#uni">uni</a></li>
+              
+              <li><a href="#unix-timestamp">unix-timestamp</a></li>
+              
+              <li><a href="#unzip1-with-cdr">unzip1-with-cdr</a></li>
+              
+              <li><a href="#unzip1-with-cdr-iterative">unzip1-with-cdr-iterative</a></li>
+              
+              <li><a href="#values">values</a></li>
+              
+              <li><a href="#vector">vector</a></li>
+              
+              <li><a href="#vector-&gt;byte-vector">vector-&gt;byte-vector</a></li>
+              
+              <li><a href="#vector-&gt;list">vector-&gt;list</a></li>
+              
+              <li><a href="#vector?">vector?</a></li>
+              
+              <li><a href="#vni">vni</a></li>
+              
+              <li><a href="#with-input-from-file">with-input-from-file</a></li>
+              
+              <li><a href="#with-output-to-file">with-output-to-file</a></li>
+              
+              <li><a href="#write">write</a></li>
+              
+              <li><a href="#write-char">write-char</a></li>
+              
+              <li><a href="#write?">write?</a></li>
+              
+              <li><a href="#wrong?">wrong?</a></li>
+              
+              <li><a href="#yes?">yes?</a></li>
+              
+              <li><a href="#zero?">zero?</a></li>
+              
+              <li><a href="#zip">zip</a></li>
+              
+              <li><a href="#|&gt;">|&gt;</a></li>
+              
+              <li><a href="#||">||</a></li>
+              
+            </ul>
+          </div>
+        </div>
       
     </div>
     <div id="docs">
+      <h1>Prelude</h1>
+      <span class="description">This view contains all the functions that are defined in zepto at launch time.</span>
       
-      <h2 id="namespace">byte-vector</h2>
+      <h2 id="byte-vector">byte-vector</h2>
       
         <div class="fun">
           <h3 id="byte-vector:append"class="name">byte-vector:append</h3>
@@ -1086,7 +1232,7 @@
         </div>
       
       
-      <h2 id="namespace">char</h2>
+      <h2 id="char">char</h2>
       
         <div class="fun">
           <h3 id="char:alpha?"class="name">char:alpha?</h3>
@@ -1155,7 +1301,7 @@
         </div>
       
       
-      <h2 id="namespace">hash</h2>
+      <h2 id="hash">hash</h2>
       
         <div class="fun">
           <h3 id="hash:contains?"class="name">hash:contains?</h3>
@@ -1242,7 +1388,7 @@
         </div>
       
       
-      <h2 id="namespace">list</h2>
+      <h2 id="list">list</h2>
       
         <div class="fun">
           <h3 id="list:after"class="name">list:after</h3>
@@ -1353,7 +1499,7 @@
         </div>
       
       
-      <h2 id="namespace">math</h2>
+      <h2 id="math">math</h2>
       
         <div class="fun">
           <h3 id="math:coprime?"class="name">math:coprime?</h3>
@@ -1476,7 +1622,7 @@
         </div>
       
       
-      <h2 id="namespace">sort</h2>
+      <h2 id="sort">sort</h2>
       
         <div class="fun">
           <h3 id="sort:_insert"class="name">sort:_insert</h3>
@@ -1527,7 +1673,7 @@
         </div>
       
       
-      <h2 id="namespace">string</h2>
+      <h2 id="string">string</h2>
       
         <div class="fun">
           <h3 id="string:append"class="name">string:append</h3>
@@ -1674,7 +1820,7 @@
         </div>
       
       
-      <h2 id="namespace">vector</h2>
+      <h2 id="vector">vector</h2>
       
         <div class="fun">
           <h3 id="vector:after"class="name">vector:after</h3>
@@ -1803,7 +1949,7 @@
         </div>
       
       
-      <h2 id="namespace">zepto</h2>
+      <h2 id="zepto">zepto</h2>
       
         <div class="fun">
           <h3 id="zepto:major-version"class="name">zepto:major-version</h3>
@@ -1836,7 +1982,7 @@
         </div>
       
       
-      <h2 id="namespace">global</h2>
+      <h2 id="global">global</h2>
       
         <div class="fun">
           <h3 id="&amp;&amp;"class="name">&amp;&amp;</h3>

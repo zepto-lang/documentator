@@ -8,7 +8,10 @@
                (signature (string:substitute (list:ref split (sub1 (length split))) "  source: " ""))
                (template-string (read-contents "documentator/partial.zms")))
         ((import "mustache:template") template-string
-          (make-hash "elements"
+          (make-hash
+            "name" (symbol->string name)
+            "description" (++ "This view contains the function" (symbol->string name))
+            "elements"
             (make-hash
               "namespace" ""
               "contents" (make-hash
@@ -40,7 +43,9 @@
                       '()
                       (zepto:get-bindings name))))
         ((import "mustache:template") template-string
-          (make-hash "elements" (make-hash "namespace" name "contents" all)))))))
+          (make-hash "name" name
+                     "description" (++ "This view contains all the functions that are defined in the namespace " name)
+                     "elements" (make-hash "namespace" name "contents" all)))))))
         (document name)))))
 
 (define-syntax documentator:global
@@ -78,5 +83,7 @@
                 (hash:keys-map
                   (lambda (k) (make-hash "namespace" k "contents" (reduce make-fun '() (rest-map k)))) rest-map)))
         ((import "mustache:template") template-string
-          (make-hash "elements" (++ rest-list (make-hash "namespace" "global" "contents" globals))))))))
+          (make-hash "name" "Prelude"
+                     "description" "This view contains all the functions that are defined in zepto at launch time"
+                     "elements" (++ rest-list (make-hash "namespace" "global" "contents" globals))))))))
         (document)))))
